@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - Fake News Detection API</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+            color: white;
+        }
+        .method.post { background-color: #28a745; }
+        .method.get { background-color: #17a2b8; }
+        .url {
+            font-family: 'Courier New', monospace;
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #e0e0e0;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .status.healthy {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.unhealthy {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Documentación de la API</h1>
+        <p>API REST para Detección de Noticias Falsas usando Machine Learning</p>
+        
+        <div style="margin: 20px 0; padding: 15px; background-color: #e9ecef; border-radius: 5px;">
+            <h3>🔍 Estado del Modelo</h3>
+            <span class="status {% if model_status %}healthy{% else %}unhealthy{% endif %}">
+                {% if model_status %}✅ Modelo Operativo{% else %}❌ Modelo No Disponible{% endif %}
+            </span>
+        </div>
+
+        <h2>🚀 Endpoints Disponibles</h2>
+        
+        {% for endpoint in endpoints %}
+        <div class="endpoint">
+            <h3>
+                <span class="method {{ endpoint.method|lower }}">{{ endpoint.method }}</span>
+                {{ endpoint.description }}
+            </h3>
+            <p><strong>URL:</strong> <span class="url">{{ endpoint.url }}</span></p>
+            <p>{{ endpoint.description }}</p>
+            
+            {% if endpoint.example %}
+            <h4>Ejemplo de Request:</h4>
+            <pre>{{ endpoint.example|pprint }}</pre>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <h2>💻 Ejemplos Detallados</h2>
+        
+        <div class="endpoint">
+            <h3>1. Analizar una Noticia</h3>
+            
+            <h4>Solicitud:</h4>
+            <pre>
+POST /api/analyze/
+Content-Type: application/json
+
+{
+    "text": "El gobierno anunció nuevas medidas económicas para combatir la inflación",
+    "metadata": {
+        "source": "periodico-ejemplo.com",
+        "category": "economía",
+        "author": "Juan Pérez"
+    }
+}
+            </pre>
+            
+            <h4>Respuesta Exitosa:</h4>
+            <pre>
+{
+    "analysis_id": "550e8400-e29b-41d4-a716-446655440000",
+    "prediction": "VERDADERA",
+    "confidence": 0.892,
+    "probabilities": {
+        "real": 0.892,
+        "fake": 0.108
+    },
+    "text_info": {
+        "length": 78,
+        "processed_length": 65
+    },
+    "timestamp": "2024-01-15T10:30:00.123456",
+    "status": "success"
+}
+            </pre>
+        </div>
+
+        <div class="endpoint">
+            <h3>2. Consultar Análisis Existente</h3>
+            
+            <h4>Solicitud:</h4>
+            <pre>
+GET /api/analysis/550e8400-e29b-41d4-a716-446655440000/
+            </pre>
+            
+            <h4>Respuesta:</h4>
+            <pre>
+{
+    "analysis_id": "550e8400-e29b-41d4-a716-446655440000",
+    "prediction": "VERDADERA",
+    "confidence": 0.892,
+    "probabilities": {
+        "real": 0.892,
+        "fake": 0.108
+    },
+    "metadata": {
+        "source": "periodico-ejemplo.com",
+        "category": "economía"
+    },
+    "created_at": "2024-01-15T10:30:00.123456",
+    "status": "success"
+}
+            </pre>
+        </div>
+
+        <div class="endpoint">
+            <h3>3. Información del Modelo</h3>
+            
+            <h4>Solicitud:</h4>
+            <pre>
+GET /api/model/info/
+            </pre>
+            
+            <h4>Respuesta:</h4>
+            <pre>
+{
+    "model_name": "Fake News Classifier",
+    "version": "1.0.0",
+    "training_date": "2024-01-10",
+    "metrics": {
+        "accuracy": 0.89,
+        "f1": 0.87,
+        "auc": 0.91
+    },
+    "is_active": true,
+    "created_at": "2024-01-15T10:30:00.123456"
+}
+            </pre>
+        </div>
+
+        <h2>⚠️ Códigos de Error</h2>
+        
+        <div class="endpoint">
+            <h4>400 - Bad Request</h4>
+            <pre>
+{
+    "status": "error",
+    "message": "El texto debe tener al menos 10 caracteres",
+    "code": "INVALID_TEXT"
+}
+            </pre>
+            
+            <h4>404 - Not Found</h4>
+            <pre>
+{
+    "status": "error",
+    "message": "Análisis no encontrado",
+    "code": "NOT_FOUND"
+}
+            </pre>
+            
+            <h4>503 - Service Unavailable</h4>
+            <pre>
+{
+    "status": "error",
+    "message": "El servicio de análisis no está disponible temporalmente",
+    "code": "SERVICE_UNAVAILABLE"
+}
+            </pre>
+        </div>
+
+        <h2>📏 Limitaciones</h2>
+        <ul>
+            <li><strong>Texto mínimo:</strong> 10 caracteres</li>
+            <li><strong>Texto máximo:</strong> 5,000 caracteres</li>
+            <li><strong>Palabras mínimas:</strong> 3 palabras</li>
+            <li><strong>Idioma:</strong> Optimizado para español</li>
+            <li><strong>Rate limiting:</strong> No implementado actualmente</li>
+        </ul>
+
+        <h2>🔧 Herramientas de Desarrollo</h2>
+        <div class="endpoint">
+            <h4>Health Check:</h4>
+            <p>Verificar el estado del servicio: <span class="url">GET /api/health/</span></p>
+            
+            <h4>Estadísticas:</h4>
+            <p>Métricas de uso: <span class="url">GET /api/stats/</span></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666;">
+            <p>🚀 <strong>Fake News Detection API v1.0.0</strong></p>
+            <p>Desarrollado con Django REST Framework + Machine Learning</p>
+        </div>
+    </div>
+</body>
+</html>

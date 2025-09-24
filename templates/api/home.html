@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ api_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.healthy {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.unhealthy {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .endpoints {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .method.post {
+            background-color: #28a745;
+            color: white;
+        }
+        .method.get {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .url {
+            font-family: 'Courier New', monospace;
+            background-color: #e9ecef;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+        .model-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 {{ api_name }}</h1>
+            <p>API REST para Detección de Noticias Falsas</p>
+            <p>Versión: {{ version }}
+                <span class="status {% if model_status %}healthy{% else %}unhealthy{% endif %}">
+                    {% if model_status %}✅ Operativo{% else %}❌ Fuera de Servicio{% endif %}
+                </span>
+            </p>
+        </div>
+
+        <div class="model-info">
+            <h3>🤖 Estado del Modelo</h3>
+            <p><strong>Estado:</strong> {% if model_status %}Cargado y listo{% else %}No disponible{% endif %}</p>
+            <p><strong>Tipo:</strong> Clasificador de Texto con Machine Learning</p>
+            <p><strong>Función:</strong> Detecta si una noticia es verdadera o falsa</p>
+        </div>
+
+        <h2>📋 Endpoints Disponibles</h2>
+        
+        <div class="endpoints">
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> Análisis de Noticias</h3>
+                <p class="url">/api/analyze/</p>
+                <p>Analiza un texto de noticia para determinar si es falsa o verdadera.</p>
+                <p><strong>Parámetros:</strong> text (obligatorio), metadata (opcional)</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> Consultar Análisis</h3>
+                <p class="url">/api/analysis/{id}/</p>
+                <p>Obtiene los resultados de un análisis específico usando su ID.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> Info del Modelo</h3>
+                <p class="url">/api/model/info/</p>
+                <p>Información detallada del modelo de machine learning.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> Estado de Salud</h3>
+                <p class="url">/api/health/</p>
+                <p>Verifica el estado operativo del servicio y sus componentes.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> Estadísticas</h3>
+                <p class="url">/api/stats/</p>
+                <p>Estadísticas de uso y rendimiento de la API.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> Documentación</h3>
+                <p class="url">/api/docs/</p>
+                <p>Documentación detallada con ejemplos de uso.</p>
+            </div>
+        </div>
+
+        <h2>💡 Ejemplo de Uso</h2>
+        <div class="model-info">
+            <h4>Solicitud POST a /api/analyze/:</h4>
+            <pre style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;">
+{
+    "text": "Esta es una noticia que quiero analizar para saber si es falsa",
+    "metadata": {
+        "source": "ejemplo.com",
+        "category": "política"
+    }
+}
+            </pre>
+
+            <h4>Respuesta:</h4>
+            <pre style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;">
+{
+    "analysis_id": "123e4567-e89b-12d3-a456-426614174000",
+    "prediction": "VERDADERA",
+    "confidence": 0.87,
+    "probabilities": {
+        "real": 0.87,
+        "fake": 0.13
+    },
+    "status": "success"
+}
+            </pre>
+        </div>
+
+        <div class="footer">
+            <p>🚀 <strong>Fake News Detection API</strong> - Desarrollado para detectar desinformación</p>
+            <p>Tecnologías: Django REST Framework + Scikit-learn + Machine Learning</p>
+        </div>
+    </div>
+</body>
+</html>
