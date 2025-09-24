@@ -196,14 +196,7 @@ static/
 logs/
 
 # Machine Learning specific
-*.pkl
-*.joblib
-*.h5
-*.hdf5
-*.model
-*.weights
-models/*.pkl
-models/*.joblib
+
 
 # Jupyter notebooks (optional - comment if you want to track notebooks)
 # *.ipynb
